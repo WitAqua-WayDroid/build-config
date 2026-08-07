@@ -87,12 +87,11 @@ yes | repo init -u https://github.com/WitAqua/manifest.git -b ${VERSION} -g defa
 repo version
 
 echo "Syncing"
-# repo forall -c "git reset --hard && git clean -fdx" || true
-(
-  repo sync --detach --current-branch --no-tags --force-remove-dirty --force-sync -j12 ||
-  repo sync --detach --current-branch --no-tags --force-remove-dirty --force-sync -j12 ||
-  repo sync --detach --current-branch --no-tags --force-remove-dirty --force-sync -j12
-) > /tmp/android-sync.log 2>&1
+repo forall -c "git reset --hard && git clean -fdx" || true
+for i in {1..3}; do
+  repo sync --detach --current-branch --no-tags --force-remove-dirty --force-sync -j12 \
+    > "/tmp/android-sync-$BUILD_UUID.log" 2>&1 && break
+done
 repo forall -vpc "if [ -f .gitattributes ]; then git lfs pull; fi" >> /tmp/android-sync.log 2>&1
 . build/envsetup.sh
 
