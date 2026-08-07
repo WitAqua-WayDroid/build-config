@@ -89,10 +89,9 @@ repo version
 echo "Syncing"
 repo forall -c "git reset --hard && git clean -fdx" || true
 for i in {1..3}; do
-  repo sync --detach --current-branch --no-tags --force-remove-dirty --force-sync -j12 \
-    > "/tmp/android-sync-$BUILD_UUID.log" 2>&1 && break
+  repo sync --detach --current-branch --no-tags --force-remove-dirty --force-sync -j12 2>&1 | tee "/tmp/android-sync-$BUILD_UUID.log" && break
 done
-repo forall -vpc "if [ -f .gitattributes ]; then git lfs pull; fi" >> /tmp/android-sync.log 2>&1
+repo forall -vpc "if [ -f .gitattributes ]; then git lfs pull; fi" 2>&1 | tee -a "$SYNC_LOG"
 . build/envsetup.sh
 
 
