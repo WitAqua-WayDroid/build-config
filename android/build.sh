@@ -37,8 +37,7 @@ fi
 # EXP_PICK_CHANGES
 
 if [ -z "$BUILD_UUID" ]; then
-  #export BUILD_UUID="$(uuidgen)"
-  export BUILD_UUID="$BUILDKITE_BUILD_ID"
+  export BUILD_UUID="${BUILDKITE_BUILD_ID:-$(uuidgen 2>/dev/null)}"
 fi
 
 if [ -z "$REPO_VERSION" ]; then
@@ -87,9 +86,11 @@ yes | repo init -u https://github.com/WitAqua/manifest.git -b ${VERSION} -g defa
 repo version
 
 echo "Syncing"
+export SYNC_LOG="/tmp/android-sync-${BUILD_UUID:-unknown}.log"
 repo forall -c "git reset --hard && git clean -fdx" || true
 for i in {1..3}; do
-  repo sync --detach --current-branch --no-tags --force-remove-dirty --force-sync -j12 2>&1 | tee "/tmp/android-sync-$BUILD_UUID.log" && break
+  echo "Sync attempt $i..."
+  repo sync --detach --current-branch --no-tags --force-remove-dirty --force-sync -j12 2>&1 | tee "$SYNC_LOG" && break
 done
 repo forall -vpc "if [ -f .gitattributes ]; then git lfs pull; fi" 2>&1 | tee -a "$SYNC_LOG"
 . build/envsetup.sh
