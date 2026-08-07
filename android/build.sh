@@ -87,7 +87,7 @@ yes | repo init -u https://github.com/WitAqua/manifest.git -b ${VERSION} -g defa
 repo version
 
 echo "Syncing"
-repo forall -c "git reset --hard && git clean -fdx" || true
+# repo forall -c "git reset --hard && git clean -fdx" || true
 (
   repo sync --detach --current-branch --no-tags --force-remove-dirty --force-sync -j12 ||
   repo sync --detach --current-branch --no-tags --force-remove-dirty --force-sync -j12 ||
