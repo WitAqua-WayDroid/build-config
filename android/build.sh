@@ -93,7 +93,7 @@ for i in {1..3}; do
   repo sync --detach --current-branch --no-tags --force-remove-dirty --force-sync -j12 2>&1 | tee "$SYNC_LOG" && break
 done
 repo forall -vpc "if [ -f .gitattributes ]; then git lfs pull; fi" 2>&1 | tee -a "$SYNC_LOG" || true
-. build/envsetup.sh
+. build/envsetup.sh 2>&1 || true
 
 
 echo "--- Cleanup"
