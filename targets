@@ -1,0 +1,5 @@
+# WitAqua WayDroid build targets: <device> <variant> <version> [<type>]
+# VANILLA builds also upload the vendor image; TV GApps do not boot on x86_64.
+waydroid_x86_64 VANILLA 16.2
+waydroid_x86_64 GAPPS 16.2
+waydroid_tv_x86_64 VANILLA 16.2
